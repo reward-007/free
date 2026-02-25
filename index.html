@@ -1,137 +1,349 @@
-<!DOCTYPE html>
+\\\<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typing Speed + CPS Test</title>
-  <style>
-    /* ===== Body & Background ===== */
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS 26 Typing Elite - Fixed Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --ios-blue: #007AFF;
+            --ios-red: #FF3B30;
+            --ios-green: #34C759;
+            --glass: rgba(255, 255, 255, 0.25);
+            --border: rgba(255, 255, 255, 0.4);
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+        }
 
-    /* ===== Container with Liquid Glass Effect ===== */
-    .container {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
-      padding: 40px;
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "SF Pro Display", sans-serif; }
 
-    /* ===== Heading ===== */
-    h1 {
-      color: #fff;
-      margin-bottom: 20px;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
-    }
+        body {
+            background: #fbfbfd;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Fixes the screen moving/shaking */
+            position: relative;
+        }
 
-    /* ===== Textarea Styling ===== */
-    textarea {
-      width: 100%;
-      border-radius: 15px;
-      border: none;
-      padding: 15px;
-      font-size: 18px;
-      resize: none;
-      background: rgba(255, 255, 255, 0.3);
-      color: #000;
-      outline: none;
-      box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);
-    }
+        /* Ambient Liquid Background - Restored to Blue/Silver */
+        .liquid-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%; 
+            z-index: -1;
+            background: linear-gradient(135deg, #f5f7fa 0%, #d1d9e6 100%);
+            overflow: hidden; /* Prevents orbs from expanding the page */
+        }
+        
+        .orb {
+            position: absolute; 
+            border-radius: 50%; 
+            filter: blur(100px); 
+            opacity: 0.35;
+            transition: transform 0.5s ease;
+        }
+        
+        /* Orb 1 - Deep iOS Blue */
+        .orb-1 { 
+            width: 600px; height: 600px; 
+            background: var(--ios-blue); 
+            top: -10%; left: -10%; 
+            animation: driftBlue 15s infinite alternate ease-in-out;
+        }
+        
+        /* Orb 2 - Light Steel Blue (Replacing Pink) */
+        .orb-2 { 
+            width: 500px; height: 500px; 
+            background: #5ac8fa; 
+            bottom: -10%; right: -10%; 
+            animation: driftSteel 18s infinite alternate ease-in-out; 
+        }
 
-    /* ===== Button ===== */
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(10px);
-      color: #000;
-      transition: 0.3s;
-    }
+        @keyframes driftBlue { 
+            from { transform: translate(0, 0) scale(1); } 
+            to { transform: translate(40px, 30px) scale(1.05); } 
+        }
+        
+        @keyframes driftSteel { 
+            from { transform: translate(0, 0) scale(1); } 
+            to { transform: translate(-40px, -30px) scale(1.1); } 
+        }
 
-    button:hover {
-      background: rgba(255, 255, 255, 0.6);
-    }
+        .app-shell {
+            width: 940px;
+            background: var(--glass);
+            backdrop-filter: blur(50px) saturate(210%);
+            -webkit-backdrop-filter: blur(50px) saturate(210%);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 50px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 10;
+        }
 
-    /* ===== Stats Section ===== */
-    .stats {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      color: #fff;
-      font-weight: bold;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }
-  </style>
+        /* Dashboard Stats */
+        .dashboard { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .stat-group { display: flex; gap: 45px; align-items: center; }
+        .stat-circle {
+            position: relative; width: 80px; height: 80px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        svg.progress-ring { position: absolute; transform: rotate(-90deg); }
+        .stat-val { font-size: 30px; font-weight: 800; color: var(--text-primary); }
+        .stat-lab { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Configuration */
+        .config { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+        .pill-row { background: rgba(0,0,0,0.06); padding: 4px; border-radius: 16px; display: flex; gap: 4px; }
+        .pill {
+            border: none; background: transparent; padding: 8px 18px; border-radius: 13px;
+            font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-secondary); transition: 0.2s;
+        }
+        .pill.active { background: white; color: var(--ios-blue); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+        /* Typing Engine */
+        #viewport {
+            height: 120px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+        }
+        #text-engine {
+            font-size: 32px;
+            line-height: 1.6;
+            color: rgba(0,0,0,0.15);
+            transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align: center;
+        }
+        .char { position: relative; display: inline-block; white-space: pre; transition: 0.1s; }
+        .char.correct { color: var(--text-primary); }
+        .char.wrong { color: var(--ios-red); text-decoration: underline; }
+        .cursor {
+            position: absolute; left: 0; bottom: 0; width: 100%; height: 3px;
+            background: var(--ios-blue); border-radius: 2px; display: none;
+            box-shadow: 0 0 10px var(--ios-blue);
+        }
+        .active-char .cursor { display: block; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Virtual Keyboard */
+        .keyboard { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .row { display: flex; gap: 8px; }
+        .key {
+            height: 54px; min-width: 54px; background: rgba(255,255,255,0.7);
+            border-radius: 14px; display: flex; justify-content: center; align-items: center;
+            font-weight: 600; font-size: 18px; border: 1px solid rgba(255,255,255,0.5); transition: 0.1s;
+        }
+        .key.hit { background: white; transform: scale(0.9) translateY(4px); border-color: var(--ios-blue); }
+        .key-wide { width: 90px; }
+        .key-space { width: 340px; }
+
+        /* Result Modal */
+        #modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(40px);
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            border-radius: 50px; z-index: 100;
+        }
+        #result-card {
+            background: white; padding: 45px; border-radius: 40px; text-align: center;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.1); width: 420px; margin-bottom: 30px;
+        }
+        .big-val { font-size: 64px; font-weight: 800; color: var(--ios-blue); letter-spacing: -2px; }
+
+        .btn {
+            background: var(--ios-blue); color: white; border: none; padding: 18px 36px;
+            border-radius: 20px; font-size: 17px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .btn-sec { background: var(--text-primary); margin-left: 10px; }
+        .btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        #proxy { position: absolute; opacity: 0; pointer-events: none; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Typing Speed & CPS Test</h1>
-    <textarea id="typingArea" placeholder="Start typing..." rows="5" disabled></textarea>
-    <div class="stats">
-      <p>Time: <span id="time">60</span>s</p>
-      <p>Words: <span id="words">0</span></p>
-      <p>CPS: <span id="cps">0</span></p>
+
+<div class="liquid-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+</div>
+
+<div class="app-shell">
+    <div id="modal">
+        <div id="result-card">
+            <h2 style="font-weight: 800; margin-bottom: 10px;">Elite Performance</h2>
+            <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                <div><div class="big-val" id="res-wpm">0</div><p class="stat-lab">Speed</p></div>
+                <div><div class="big-val" id="res-acc" style="color: var(--ios-green)">0%</div><p class="stat-lab">Accuracy</p></div>
+            </div>
+            <p id="pb-tag" style="font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 15px;">Best: 0 WPM</p>
+        </div>
+        <div>
+            <button class="btn" onclick="reset()">Restart</button>
+            <button class="btn btn-sec" onclick="share()">Save Image</button>
+        </div>
     </div>
-    <button id="startBtn">Start Test</button>
-  </div>
 
-  <script>
-    let timeLeft = 60;
-    let timer;
-    let started = false;
+    <div class="dashboard">
+        <div class="stat-group">
+            <div class="stat-circle">
+                <svg class="progress-ring" width="80" height="80">
+                    <circle stroke="rgba(0,0,0,0.05)" stroke-width="4" fill="transparent" r="36" cx="40" cy="40"/>
+                    <circle id="timer-ring" stroke="var(--ios-blue)" stroke-width="4" stroke-dasharray="226" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" r="36" cx="40" cy="40"/>
+                </svg>
+                <div class="stat-val" id="time-val">60</div><div class="stat-lab">Sec</div>
+            </div>
+            <div><div class="stat-val" id="wpm-val">0</div><div class="stat-lab">Gross WPM</div></div>
+            <div><div class="stat-val" id="acc-val">100%</div><div class="stat-lab">Accuracy</div></div>
+        </div>
+        <div class="config">
+            <div class="pill-row" id="diff-p">
+                <button class="pill active" data-v="beginner">Beginner</button>
+                <button class="pill" data-v="normal">Normal</button>
+                <button class="pill" data-v="hard">Hard</button>
+            </div>
+            <div class="pill-row" id="time-p">
+                <button class="pill" data-v="15">15s</button>
+                <button class="pill" data-v="30">30s</button>
+                <button class="pill active" data-v="60">60s</button>
+            </div>
+        </div>
+    </div>
 
-    const typingArea = document.getElementById("typingArea");
-    const timeDisplay = document.getElementById("time");
-    const wordsDisplay = document.getElementById("words");
-    const cpsDisplay = document.getElementById("cps");
-    const startBtn = document.getElementById("startBtn");
+    <div id="viewport">
+        <div id="text-engine"></div>
+    </div>
 
-    startBtn.addEventListener("click", () => {
-      if (!started) {
-        started = true;
-        typingArea.disabled = false;
-        typingArea.value = '';
-        typingArea.focus();
-        timeLeft = 60;
-        timer = setInterval(updateTimer, 1000);
-      }
-    });
+    <input type="text" id="proxy" autofocus>
+    <div class="keyboard" id="kb"></div>
+</div>
 
-    function updateTimer() {
-      if (timeLeft > 0) {
-        timeLeft--;
-        timeDisplay.textContent = timeLeft;
-        updateStats();
-      } else {
-        clearInterval(timer);
-        typingArea.disabled = true;
-        updateStats();
-        alert("Time's up! Your CPS: " + cpsDisplay.textContent);
-      }
+<script>
+    const passages = {
+        beginner: "The sun shines brightly over the green valley. It is a beautiful day to practice typing and improve your skills with every click.",
+        normal: "Efficiency is not about doing more things, but about doing the right things at the right speed. Precision leads to mastery of the keyboard.",
+        hard: "Quantum computational architectures facilitate extraordinary paradigms in algorithmic execution and multi-threaded synchronization protocols."
+    };
+
+    const layout = [ ["Q","W","E","R","T","Y","U","I","O","P"], ["A","S","D","F","G","H","J","K","L"], ["Shift","Z","X","C","V","B","N","M","Delete"], ["Space"] ];
+    let mode = 'beginner', maxT = 60, timeL = 60, idx = 0, err = 0, typed = 0, running = false, timer = null;
+
+    function init() {
+        renderKeyboard();
+        reset();
+        
+        document.querySelectorAll('.pill').forEach(p => {
+            p.onclick = () => {
+                p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+                p.classList.add('active');
+                if(p.parentElement.id === 'diff-p') mode = p.dataset.v;
+                if(p.parentElement.id === 'time-p') { maxT = parseInt(p.dataset.v); timeL = maxT; }
+                reset();
+            };
+        });
+
+        window.onkeydown = e => {
+            if(document.getElementById('modal').style.display === 'flex') return;
+            const key = e.key === " " ? "space" : (e.key === "Backspace" ? "delete" : e.key.toLowerCase());
+            const el = document.getElementById(`k-${key}`);
+            if(el) { el.classList.add('hit'); setTimeout(() => el.classList.remove('hit'), 100); }
+            if(!running && e.key.length === 1) start();
+            if(running || (!running && e.key === "Backspace")) handleInput(e.key);
+        };
+        document.onclick = () => document.getElementById('proxy').focus();
     }
 
-    function updateStats() {
-      const text = typingArea.value.trim();
-      const words = text === "" ? 0 : text.split(/\s+/).length;
-      const chars = text.length;
-      wordsDisplay.textContent = words;
-      cpsDisplay.textContent = ((chars) / (60 - timeLeft || 1)).toFixed(2);
+    function renderKeyboard() {
+        const mount = document.getElementById('kb'); mount.innerHTML = '';
+        layout.forEach(row => {
+            const r = document.createElement('div'); r.className = 'row';
+            row.forEach(k => {
+                const d = document.createElement('div');
+                d.className = 'key' + (k.length > 1 ? ' key-wide' : '') + (k === 'Space' ? ' key-space' : '');
+                d.id = `k-${k.toLowerCase()}`; d.innerText = k; r.appendChild(d);
+            });
+            mount.appendChild(r);
+        });
     }
-  </script>
+
+    function handleInput(key) {
+        const chars = document.querySelectorAll('.char');
+        const text = passages[mode];
+
+        if(key === "Backspace" && idx > 0) {
+            chars[idx].classList.remove('active-char'); idx--;
+            chars[idx].className = 'char active-char'; return;
+        }
+        if(key.length !== 1 || idx >= text.length) return;
+
+        typed++;
+        if(key === text[idx]) chars[idx].className = 'char correct';
+        else { chars[idx].className = 'char wrong'; err++; }
+        
+        idx++;
+        if(idx < text.length) chars[idx].classList.add('active-char'); else finish();
+        updateUI();
+    }
+
+    function start() {
+        running = true;
+        timer = setInterval(() => {
+            timeL--;
+            updateUI();
+            if(timeL <= 0) finish();
+        }, 1000);
+    }
+
+    function updateUI() {
+        const elapsed = (maxT - timeL) / 60;
+        const wpm = elapsed > 0 ? Math.round((typed / 5) / elapsed) : 0;
+        const acc = typed > 0 ? Math.round(((typed - err) / typed) * 100) : 100;
+        
+        document.getElementById('time-val').innerText = timeL;
+        document.getElementById('wpm-val').innerText = wpm;
+        document.getElementById('acc-val').innerText = Math.max(0, acc) + "%";
+
+        const offset = 226 - (226 * timeL / maxT);
+        document.getElementById('timer-ring').style.strokeDashoffset = offset;
+    }
+
+    function finish() {
+        clearInterval(timer); running = false;
+        document.getElementById('res-wpm').innerText = document.getElementById('wpm-val').innerText;
+        document.getElementById('res-acc').innerText = document.getElementById('acc-val').innerText;
+        
+        let history = JSON.parse(localStorage.getItem('typing_best') || '0');
+        if(parseInt(document.getElementById('res-wpm').innerText) > history) {
+            history = document.getElementById('res-wpm').innerText;
+            localStorage.setItem('typing_best', history);
+        }
+        document.getElementById('pb-tag').innerText = `World Class Personal Best: ${history} WPM`;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function share() {
+        html2canvas(document.getElementById('result-card')).then(c => {
+            const l = document.createElement('a'); l.download = 'typing-elite.png';
+            l.href = c.toDataURL(); l.click();
+        });
+    }
+
+    function reset() {
+        document.getElementById('modal').style.display = 'none';
+        clearInterval(timer); running = false; timeL = maxT; idx = 0; err = 0; typed = 0;
+        updateUI();
+        document.getElementById('text-engine').innerHTML = passages[mode].split('').map((c, i) => 
+            `<span class="char ${i === 0 ? 'active-char' : ''}">${c}<span class="cursor"></span></span>`
+        ).join('');
+    }
+
+    init();
+</script>
 </body>
 </html>
